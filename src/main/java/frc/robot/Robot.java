@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-//vtgyy
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -58,7 +57,6 @@ public class Robot extends TimedRobot {
       move(1,-1);
     }
     SmartDashboard.putNumber("theNumberOne", 1);
-    SmartDashboard.putNumber("funnyNumber", 420.69);
   }
 
   @Override
