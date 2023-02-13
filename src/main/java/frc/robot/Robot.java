@@ -56,7 +56,7 @@ public class Robot extends TimedRobot {
     {
       move(1,-1);
     }
-    SmartDashboard.putNumber("theNumberOne", 1);
+    SmartDashboard.putNumber("funnyNumber", 420.69);
   }
 
   @Override
