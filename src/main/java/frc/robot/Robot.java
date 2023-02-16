@@ -7,6 +7,7 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
+import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
@@ -27,13 +28,15 @@ public class Robot extends TimedRobot {
   private TalonFX talonFXLeft = new TalonFX(1);
   private TalonFX talonFXRight = new TalonFX(2);
   private Timer timer = new Timer();
-  public Sibling sib = new Sibling();
 
+  private PneumaticHub bensNice = new PneumaticHub(2);
+  private Pneumatics claw = new Pneumatics();
 
   @Override
   public void robotInit() {
     talonFXLeft.setInverted(true);
     talonFXRight.setInverted(false);
+    bensNice.enableCompressorAnalog(0, 120);
   }
 
   @Override
@@ -48,14 +51,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    if(timer.get() < 5)
-    {
+    if (timer.get() < 5) {
       move(1,1);
-    }
-    else if(timer.get() < 10)
-    {
+    } else if (timer.get() < 10) {
       move(1,-1);
     }
+    
     SmartDashboard.putNumber("funnyNumber", 420.69);
   }
 
@@ -67,10 +68,13 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     move(-xbox.getRawAxis(1) + xbox.getRawAxis(0), -xbox.getRawAxis(1) + -xbox.getRawAxis(0));
-    sib.hello=3;
+    if (xbox.getRawButton(1)) {
+      claw.toggle();
+    }
   }
   @Override
   public void disabledInit() {
+    bensNice.disableCompressor();
   }
 
   @Override
