@@ -57,7 +57,7 @@ public class Drive {
         rightEncoder.configFactoryDefault(); //sets defaults
         rightEncoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition); //boots to abs position
         rightEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180); //does 180 and -180
-        rightEncoder.configSensorDirection(true); //reverses motor
+        rightEncoder.configSensorDirection(false); //reverses motor
         rightEncoder.configMagnetOffset(90); //sets offset
 
         setPosition(leftEncoder.getAbsolutePosition(), rightEncoder.getAbsolutePosition());
