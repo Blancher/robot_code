@@ -4,12 +4,10 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -25,56 +23,51 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
   private XboxController xbox = new XboxController(0);
-  private TalonFX talonFXLeft = new TalonFX(1);
-  private TalonFX talonFXRight = new TalonFX(2);
-  private Timer timer = new Timer();
 
+  private Drive drive = new Drive();
+  
   private PneumaticHub bensNice = new PneumaticHub(2);
   private Pneumatics claw = new Pneumatics();
 
   @Override
   public void robotInit() {
-    talonFXLeft.setInverted(true);
-    talonFXRight.setInverted(false);
     bensNice.enableCompressorAnalog(0, 120);
   }
 
   @Override
-  public void robotPeriodic() {
-
-  }
+  public void robotPeriodic() {}
 
   @Override
-  public void autonomousInit() {
-    timer.start();
-  }
+  public void autonomousInit() {}
 
   @Override
   public void autonomousPeriodic() {
-    if (timer.get() < 5) {
-      move(1,1);
-    } else if (timer.get() < 10) {
-      move(1,-1);
+    if (drive.leftMotor.getSelectedSensorPosition() < 420.69 && drive.rightMotor.getSelectedSensorPosition() < 420.69) {
+      drive.move(1, 1);
+    } else {
+      drive.move(0, 0);
     }
-    
-    SmartDashboard.putNumber("funnyNumber", 420.69);
   }
 
   @Override
-  public void teleopInit() {
-
-  }
+  public void teleopInit() {}
 
   @Override
   public void teleopPeriodic() {
-    move(-xbox.getRawAxis(1) + xbox.getRawAxis(0), -xbox.getRawAxis(1) + -xbox.getRawAxis(0));
+    drive.move(-xbox.getRawAxis(1) + xbox.getRawAxis(0), -xbox.getRawAxis(1) + -xbox.getRawAxis(0));
+    
     if (xbox.getRawButton(1)) {
       claw.toggle();
     }
+
+    SmartDashboard.putNumber("leftEncoderPosition", drive.leftEncoder.getAbsolutePosition());
+    SmartDashboard.putNumber("rightEncoderPosition", drive.rightEncoder.getAbsolutePosition());
   }
   @Override
   public void disabledInit() {
     bensNice.disableCompressor();
+    drive.leftMotor.setNeutralMode(NeutralMode.Coast);
+    drive.rightMotor.setNeutralMode(NeutralMode.Coast);
   }
 
   @Override
@@ -91,10 +84,4 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationPeriodic() {}
-
-  public void move(double left, double right)
-  {
-    talonFXLeft.set(ControlMode.PercentOutput, left);
-    talonFXRight.set(ControlMode.PercentOutput, right);
-  }
 }
